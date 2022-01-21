@@ -1,0 +1,33 @@
+<h1>Cart</h1>
+
+<table class="table table-striped mb-2" *ngIf="products">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of products; index as i">
+      <td scope="row"><a class="nav-link" routerLink="/admin/product-detail/{{ item.id }}">{{ item.id }}</a></td>
+      <td scope="row">{{ item.name }}</td>
+      <td scope="row">{{ item.description }}</td>
+      <td scope="row" style="text-align: right">{{ item.price | number:'1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td scope="row"></td>
+      <td scope="row"></td>
+      <td scope="row" style="text-align: right"><strong>Total</strong></td>
+      <td scope="row" style="text-align: right"><strong>{{sumPrice | number:'1.2-2'}}</strong></td>
+    </tr>
+  </tbody>
+</table>
+<form #heroForm="ngForm" (ngSubmit)="placeOrder()">
+  <div class="form-group">
+    <label for="id">Name</label>
+    <input type="text" [(ngModel)]="orders.name" class="form-control" id="name" name="name" #id="ngModel">
+  </div>
+  <button type="submit" class="btn btn-primary" >Place Order</button>
+</form>

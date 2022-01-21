@@ -10,12 +10,22 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { HomeComponent } from './home/home.component';
+import { CartComponent } from './cart/cart.component';
+import { OrderListComponent } from './admin/order-list/order-list.component';
+import { OrderDetailComponent } from './admin/order-detail/order-detail.component';
+import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProductListComponent,
-    ProductDetailComponent
+    ProductDetailComponent,
+    HomeComponent,
+    CartComponent,
+    OrderListComponent,
+    OrderDetailComponent,
+    AdminMenuComponent
   ],
   imports: [
     BrowserModule,

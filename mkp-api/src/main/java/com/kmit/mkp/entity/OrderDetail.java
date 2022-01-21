@@ -1,19 +1,28 @@
 package com.kmit.mkp.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.Data;
+
+import javax.persistence.*;
 
 @Entity
-public class Orders {
+@Data
+public class OrderDetail {
     @Id
     private String id;
 
-    private String name;
-    private String address1;
-    private String address2;
-    private String address3;
+//    private String orderId;
 
-    private String totalAmount;
+    @ManyToOne
+    @JoinColumn(name="order_id")
+    private Orders order;
 
-    
+    @ManyToOne
+    @JoinColumn(name="product_id")
+    private Product product;
+
+//    private String productId;
+
+    private Integer quantity;
+    private Double price;
+    private Double total;
 }

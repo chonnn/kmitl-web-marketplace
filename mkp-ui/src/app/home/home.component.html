@@ -1,0 +1,13 @@
+<h1>Product</h1>
+<div class="row mt-3" *ngFor="let item of products; index as i">
+  <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{item.name}}</h5>
+          <h6 class="card-subtitle mb-2">{{item.price}}</h6>
+          <p class="card-text">{{item.description}}</p>
+          <button type="button" class="btn btn-primary" (click)="addToCart(item)">Add to Cart</button>
+        </div>
+      </div>
+  </div>
+</div>
