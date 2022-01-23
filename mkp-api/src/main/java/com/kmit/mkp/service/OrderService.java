@@ -6,10 +6,12 @@ import com.kmit.mkp.dto.ProductDto;
 import com.kmit.mkp.entity.OrderDetail;
 import com.kmit.mkp.entity.Orders;
 import com.kmit.mkp.entity.Product;
+import com.kmit.mkp.mapper.OrderMapper;
 import com.kmit.mkp.repository.OrderDetailRepository;
 import com.kmit.mkp.repository.OrdersRepository;
 import com.kmit.mkp.repository.ProductRepository;
 import com.kmit.mkp.util.UUIDGenerator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -20,97 +22,43 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
-    @Autowired
-    private OrdersRepository ordersRepository;
+    private final OrdersRepository ordersRepository;
+    private final OrderDetailRepository orderDetailRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
+    private final OrderMapper orderMapper;
 
     @Transactional
     public OrdersDto saveOrder(OrdersDto ordersDto){
+        Orders orders = orderMapper.toOrder(ordersDto);
+        orders.setTotalAmount(
+                orders.getOrderDetails().stream()
+                        .mapToDouble(od -> od.getPrice())
+                        .sum()
+        );
+        orders.getOrderDetails().forEach(od -> od.setOrder(orders));
 
-        ordersDto.setId(UUIDGenerator.getUUID());
-
-        Orders orders = new Orders();
-        orders.setId(ordersDto.getId());
-        orders.setName(ordersDto.getName());
-        orders.setOrderDetails(new ArrayList<>());
-
-        OrderDetail orderDetail;
-        Product product;
-        Double total = 0.0;
-
-        for(OrderDetailDto orderDetailDto: ordersDto.getOrderDetails()){
-            product = productRepository.findById(orderDetailDto.getProductId()).get();
-
-            orderDetail = new OrderDetail();
-            orderDetail.setId(UUIDGenerator.getUUID());
-            orderDetail.setOrder(orders);
-
-            orderDetail.setProduct(product);
-            orderDetail.setPrice(product.getPrice());
-
-            orderDetailDto.setPrice(product.getPrice());
-
-            total += product.getPrice();
-
-            orders.getOrderDetails().add(orderDetail);
-
-        }
-        orders.setTotalAmount(total);
         ordersRepository.save(orders);
         return ordersDto;
     }
 
     public List<OrdersDto> findOrders(){
         List<Orders> ordersList = ordersRepository.findAll();
-
-        List<OrdersDto> ordersDtoList = new ArrayList<>();
-        OrdersDto ordersDto;
-        OrderDetailDto orderDetailDto;
-
-        for (Orders orders: ordersList) {
-            ordersDto = new OrdersDto();
-            ordersDto.setId(orders.getId());
-            ordersDto.setName(orders.getName());
-            ordersDto.setOrderDetails(new ArrayList<>());
-            ordersDto.setTotalAmount(orders.getTotalAmount());
-            ordersDtoList.add(ordersDto);
-            for (OrderDetail orderDetail :orders.getOrderDetails()) {
-                orderDetailDto = new OrderDetailDto();
-                orderDetailDto.setProductId(orderDetail.getOrder().getId());
-                orderDetailDto.setProductName(orderDetail.getProduct().getName());
-                orderDetailDto.setPrice(orderDetail.getPrice());
-
-                ordersDto.getOrderDetails().add(orderDetailDto);
-            }
-        }
+        List<OrdersDto> ordersDtoList = orderMapper.toOrderDtoList(ordersList);
         return ordersDtoList;
     }
 
     public OrdersDto findOrder(String orderId){
         Orders orders = ordersRepository.findById(orderId).get();
 
-        OrdersDto ordersDto = new OrdersDto();;
-        OrderDetailDto orderDetailDto;
-
-        ordersDto.setId(orders.getId());
-        ordersDto.setName(orders.getName());
-        ordersDto.setTotalAmount(orders.getTotalAmount());
-        ordersDto.setOrderDetails(new ArrayList<>());
-        for (OrderDetail orderDetail :orders.getOrderDetails()) {
-            orderDetailDto = new OrderDetailDto();
-            orderDetailDto.setProductId(orderDetail.getOrder().getId());
-            orderDetailDto.setProductName(orderDetail.getProduct().getName());
-            orderDetailDto.setPrice(orderDetail.getPrice());
-
-            ordersDto.getOrderDetails().add(orderDetailDto);
-        }
+        OrdersDto ordersDto = orderMapper.toOrderDto(orders);
+        ordersDto.getOrderDetails().forEach(od -> {
+            Product p = productRepository.findById(od.getProductId()).get();
+            od.setProductName(p.getName());
+        });
 
         return ordersDto;
     }
