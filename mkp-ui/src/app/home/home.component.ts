@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Product } from '../interface/product';
 import { ProductService } from '../service/product.service';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'app-home',
@@ -8,6 +9,9 @@ import { ProductService } from '../service/product.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  @ViewChild('addToCartSuccessSwal')
+  public readonly addToCartSuccessSwal!: SwalComponent;
 
   products!:Product[];
 
@@ -28,7 +32,11 @@ export class HomeComponent implements OnInit {
     }
     cartProducts.push(product);
     localStorage.setItem(this.cartKey,JSON.stringify(cartProducts));
-    alert('Add to cart successfuly!')
+    // alert('Add to cart successfuly!');
+    this.addToCartSuccessSwal.fire();
   }
 
+  addToCartSuccessClose() {
+
+  }
 }
