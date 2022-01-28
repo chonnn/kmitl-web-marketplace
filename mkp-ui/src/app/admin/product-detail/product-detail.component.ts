@@ -25,7 +25,7 @@ export class ProductDetailComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.product.id = params['id'];
       if(this.product.id){
-        this.productService.getProduct(this.product.id).subscribe((res)=>{
+        this.productService.getAdminProduct(this.product.id).subscribe((res)=>{
           this.product = res;
         });
       }
@@ -33,7 +33,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   onSubmit(){
-    this.productService.saveProduct(this.product).subscribe((res)=>{
+    this.productService.saveAdminProduct(this.product).subscribe((res)=>{
       alert("Save Success!");
     });
   }

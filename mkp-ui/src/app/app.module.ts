@@ -19,6 +19,8 @@ import { LoadingComponent } from './common/loading/loading.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import {LoadingInterceptor} from "./common/loading/loading.interceptor";
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { LoginComponent } from './login/login.component';
+import {AuthInterceptor} from "./common/auth/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     OrderListComponent,
     OrderDetailComponent,
     AdminMenuComponent,
-    LoadingComponent
+    LoadingComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +51,11 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
       multi: true
     },
   ],

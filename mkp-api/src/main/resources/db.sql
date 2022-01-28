@@ -7,7 +7,6 @@ create table product
 	price DOUBLE(10,2) null
 );
 
-drop table orders;
 create table orders
 (
 	id varchar(32) not null
@@ -29,4 +28,28 @@ create table order_detail
 	price DOUBLE(10,2) null,
 	total DOUBLE(10,2) null
 );
+
+create table user_token
+(
+    id varchar(32) not null
+        primary key,
+    user_id varchar(32) not null,
+    token varchar(250) not null,
+    status varchar(1) not null
+);
+
+create table users
+(
+    id varchar(32) not null
+        primary key,
+    username varchar(250) not null,
+    password varchar(250) not null,
+    status varchar(1) not null,
+    constraint users_username_uindex
+        unique (username)
+);
+
+INSERT INTO users (id, username, password, status)
+VALUES ('ab3df87394914a278a682409f69aa76d', 'admin', '1234', 'A');
+
 

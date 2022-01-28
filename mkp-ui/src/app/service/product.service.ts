@@ -15,12 +15,16 @@ export class ProductService {
     return this.http.get<Product[]>(environment.apiUrl + '/api/products');
   }
 
-  getProduct(heroId:string): Observable<Product>{
-    return this.http.get<Product>(environment.apiUrl + '/api/product/' +heroId);
+  getAdminProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(environment.apiUrl + '/api/admin/products');
   }
 
-  saveProduct(product:Product): Observable<Product>{
-    return this.http.post<Product>(environment.apiUrl + '/api/product',product);
+  getAdminProduct(heroId:string): Observable<Product>{
+    return this.http.get<Product>(environment.apiUrl + '/api/admin/product/' +heroId);
+  }
+
+  saveAdminProduct(product:Product): Observable<Product>{
+    return this.http.post<Product>(environment.apiUrl + '/api/admin/product',product);
   }
 
 }

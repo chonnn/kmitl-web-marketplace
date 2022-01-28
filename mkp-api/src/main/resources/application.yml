@@ -12,3 +12,5 @@ spring:
     hibernate:
       ddl-auto: none
 
+auth:
+  secret-key: aI84MlUO0z9GpudSCylYeD6w8oN2CYRX

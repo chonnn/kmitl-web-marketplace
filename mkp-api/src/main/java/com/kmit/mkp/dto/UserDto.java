@@ -1,2 +1,12 @@
-package com.kmit.mkp.dto;public class UserDto {
+package com.kmit.mkp.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class UserDto {
+    private String id;
+    private String username;
+    private String status;
 }
